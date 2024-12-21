@@ -1,0 +1,60 @@
+35ac00f3995034be3fa165bb659d02fde4adb1b79965419c49756f76dc72bc65
+
+Password: UHwmPe, zIKmAK, vxXDPX   (there are many possible solutions)
+
+Explanation:
+
+
+1. The vulnerability in the PHP code is due to a possible SQL injection in this query:
+
+	$sql_s = “SELECT * FROM users WHERE username=’$username’ and pw=’$passwordhash’”;
+
+
+Because the $passwordhash is directly added into the SQL.
+
+
+2. First I found the salt using sqlinject0. If a query returned true, the “login successful!” screen appeared, if it returned false, the “incorrect username or password” screen showed up. I tried: 
+
+' OR salt LIKE 'a%'; 
+
+in the password field which returned true (lucky guess), so I knew the salt contained the character 'a'. I converted the salt into ASCII values to make it easier to perform a binary search for the second letter. Here are the SQL queries I used to find the salt "a0":
+
+' OR salt LIKE 'a%';
+
+' OR ASCII(salt) = 97;
+
+‘ or ASCII(SUBSTRING(salt, 2, 2)) < 60; –
+
+‘ or ASCII(SUBSTRING(salt, 2, 2)) > 30; –
+
+‘ or ASCII(SUBSTRING(salt, 2, 2)) > 45; –
+
+‘ or ASCII(SUBSTRING(salt, 2, 2)) < 50; –
+
+‘ or ASCII(SUBSTRING(salt, 2, 2)) > 47; –
+
+‘ or ASCII(SUBSTRING(salt, 2, 2)) = 48; –
+
+‘ or salt LIKE “a0”; – 
+
+
+3. The PHP code 
+
+md5($saltedpass, true); 
+
+produces a raw MD5 hash in binary format rather than hex. This makes it possible to find a password that produces a hash containing special characters like "'='". This can make the SQL statement evaluate to true because when SQL compares two different strings it returns 0 and when it compares a string to 0 it returns true. This makes the entire SQL query respond as if the correct password was submitted. My program sql_2.py generates random 6 character strings, prepends the salt, then hashes the strings until it finds a hash digest which contains "'='" ("273d27" in hex) where the first character lands on an even index (since we are working in hex). This produces many working passwords.
+
+
+
+sources:
+
+https://www.geeksforgeeks.org/python-generate-random-string-of-given-length/ 
+https://docs.python.org/3/library/hashlib.html
+https://www.w3schools.com/python/python_regex.asp
+https://www.w3schools.com/python/gloss_python_string_concatenation.asp 
+https://cvk.posthaven.com/sql-injection-with-raw-md5-hashes 
+https://www.w3resource.com/php/function-reference/md5.php#:~:text=PHP%3A%20md5()%20function&text=The%20md5()%20function%20is,hexadecimal%20number%20
+
+
+
+

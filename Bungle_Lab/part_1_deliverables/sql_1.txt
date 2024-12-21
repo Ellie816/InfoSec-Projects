@@ -1,0 +1,14 @@
+e369cfada8a0c38b8246a95e26760e49f285eac4a6725218aaca55a5b519ccbe
+Password:  \’ or 1 = 1; -- 
+
+Explanation: Like the first problem, the string we enter into the password form is directly added to the SQL query. The only difference is that each single quote is replaced with two single quotes. However, this extra quote can be escaped with an escape character (a backslash). When the password is entered, the SQL query looks like:
+
+SELECT * FROM logins WHERE username = 'victim' AND password = '\'' or 1 = 1; -- '
+
+'\'' is treated like a string containing a backslash and a quote. Since 1 = 1 will always be true, regardless of what password equals, this statement will execute as if the correct password has been entered. The extra quote at the end has been commented out by adding two dashes.
+
+
+
+
+Sources: http://www.unixwiz.net/techtips/sql-injection.html
+

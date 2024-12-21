@@ -1,0 +1,28 @@
+
+People I collaborated with: 
+
+    Gilbert Hong
+
+Works Cited:
+
+	stackoverflow.com/questions/11369726/jquery-file-upload-hidden-iframe.     
+
+	stackoverflow.com/questions/5639346/what-is-the-shortest-function-for-reading-a-cookie-by-name-in-javascript. 
+    
+    	cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html
+    
+	stackoverflow.com/questions/11369726/jquery-file-upload-hidden-iframe. 
+
+	https://portswigger.net/web-security/cross-site-scripting/reflected
+
+	https://owasp.org/www-community/HttpOnly
+
+	https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState
+
+	https://developer.mozilla.org/en-US/docs/Web/API/Location/replace
+
+	https://stackoverflow.com/questions/18429143/strip-punctuation-with-regex-python
+
+	https://www.shecodes.io/athena/6541-what-is-the-difference-between-double-quotes-and-backticks-in-javascript#:~:text=The%20difference%20between%20%22%20(double%	20quotes,a%20template%20literal%20in%20JavaScript.
+
+	https://discourse.cakephp.org/t/csrf-token-from-cookie/8982

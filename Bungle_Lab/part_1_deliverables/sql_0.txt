@@ -1,0 +1,17 @@
+37694717ea0df2c9d1bec8f92edc7779482a08085cb0549214ef97e49e47b57e
+Password:  ‘ or ‘y’ = ‘y
+
+Explanation: The string we enter into the password form is directly added to the SQL query. This causes the SQL query to always evaluate to true. The SQL query looks like:
+
+SELECT * FROM logins WHERE username = 'victim' AND password = '<password>';
+
+Adding the password changes the SQL statement to:
+
+SELECT * FROM logins WHERE username = 'victim' AND password = '' or 'y' = 'y';
+
+Since 'y' = 'y' will always be true, regardless of what password equals, this statement will execute as if the correct password has been entered.
+
+
+
+
+Sources: http://www.unixwiz.net/techtips/sql-injection.html

